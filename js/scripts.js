@@ -80,7 +80,7 @@ function openLink(link) {
 }
 
 function openFullscreen() {
-    const elem = document.documentElement;
+    const elem = proctorFrame; // Menggunakan iframe sebagai elemen untuk fullscreen
     if (elem.requestFullscreen) {
         elem.requestFullscreen();
     } else if (elem.mozRequestFullScreen) {
