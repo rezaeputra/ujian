@@ -22,8 +22,13 @@ function startProctoring() {
         proctorContainer.classList.remove('hide'); // Tampilkan proctor-container
         proctorFrame.src = link;
         proctorFrame.style.display = 'block'; // Pastikan iframe terlihat
+
+        // Tunda permintaan fullscreen hingga iframe dimuat
+        proctorFrame.onload = () => {
+            openFullscreen();
+        };
+
         proctoringStarted = true; // Set flag menjadi true saat tombol Start ditekan
-        openFullscreen();
     } else {
         alert('Masukkan link terlebih dahulu!');
     }
@@ -61,8 +66,13 @@ function openLink(link) {
     proctorContainer.classList.remove('hide');
     proctorFrame.src = link;
     proctorFrame.style.display = 'block';
+
+    // Tunda permintaan fullscreen hingga iframe dimuat
+    proctorFrame.onload = () => {
+        openFullscreen();
+    };
+
     proctoringStarted = true;
-    openFullscreen();
 }
 
 function openFullscreen() {
