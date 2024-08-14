@@ -25,7 +25,9 @@ function startProctoring() {
 
         // Tunda permintaan fullscreen hingga iframe dimuat
         proctorFrame.onload = () => {
-            openFullscreen();
+            setTimeout(() => {
+                openFullscreen();
+            }, 100); // Memberi jeda waktu untuk memastikan iframe siap
         };
 
         proctoringStarted = true; // Set flag menjadi true saat tombol Start ditekan
@@ -69,7 +71,9 @@ function openLink(link) {
 
     // Tunda permintaan fullscreen hingga iframe dimuat
     proctorFrame.onload = () => {
-        openFullscreen();
+        setTimeout(() => {
+            openFullscreen();
+        }, 100); // Memberi jeda waktu untuk memastikan iframe siap
     };
 
     proctoringStarted = true;
@@ -96,6 +100,7 @@ document.addEventListener('msfullscreenchange', handleFullscreenChange);
 
 function handleFullscreenChange() {
     if (!document.fullscreenElement && proctoringStarted) {
+        alert('Jika tidak masuk ke mode layar penuh, silakan coba lagi atau tekan tombol fullscreen.');
         redirectToWarningPage();
     }
 }
