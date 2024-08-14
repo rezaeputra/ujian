@@ -1,0 +1,130 @@
+/* Menyembunyikan elemen-elemen yang tidak diperlukan */
+.footer, #comments, 
+.post-share-buttons,
+.sidebar-container,
+.post-share-buttons-top, 
+.centered-top-container,
+.centered-top,
+.page-body,
+.blog-name-container,
+h3.post-title {
+    display: none;
+}
+
+.post-body {
+    margin: 0;
+}
+
+.post-outer-container {
+    padding: 0;
+}
+
+.widget.Blog .blog-posts .post-outer-container {
+    padding: 0;
+    min-height: 0;
+}
+
+.widget.Blog .blog-posts .post-outer-container, .widget.PopularPosts {
+    padding: 0;
+}
+
+.page_body .centered {
+    padding: 0;
+    max-width: unset;
+}
+
+/* Menata input-container di tengah layar */
+#input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* Styling untuk input dan tombol */
+#link-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#start-btn, #qr-scan-btn, #close-qr-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+#start-btn:hover, #qr-scan-btn:hover, #close-qr-btn:hover {
+    background-color: #45a049;
+}
+
+/* Menyusun proctor-container dan iframe */
+#proctor-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#proctor-frame {
+    width: 100%;
+    flex: 1;
+    border: none;
+    display: none;
+}
+
+.hide {
+    display: none !important; /* Pastikan elemen benar-benar tersembunyi */
+}
+
+#qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#qr-video {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border: 2px solid #fff;
+}
+
+/* Mengatur font secara keseluruhan */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eaeaea;
+}
+
+/* styles.css */
+.hide {
+    display: none;
+}
+#proctor-frame {
+    width: 100%;
+    height: 500px;
+}
+#qr-video {
+    width: 100%;
+    height: 400px;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="input-container">
+        <input type="text" id="link-input" placeholder="Masukkan link di sini" autocomplete="off">
+        <button id="start-btn">Start</button>
+        <p style="margin-top: 15px; color: #777;">Atau scan QR code:</p>
+        <button id="qr-scan-btn">Scan QR Code</button>
+        <p style="margin-top: 15px; color: #777;">APPS BY REZA ERLI PUTRA</p>
+    </div>
+    <div id="proctor-container" class="hide">
+        <iframe id="proctor-frame" src="" frameborder="0"></iframe>
+    </div>
+
+    <div id="qr-container" class="hide">
+        <video id="qr-video"></video>
+        <button id="close-qr-btn">Tutup QR Scanner</button>
+    </div>
+
+    <script type = "module" src="./js/qr-scanner.umd.min.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
