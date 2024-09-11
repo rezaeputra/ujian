@@ -69,65 +69,29 @@ function openLink(link) {
     proctorFrame.src = link;
     proctorFrame.style.display = 'block';
 
-    // Tampilkan pesan kepada pengguna untuk mengetuk layar atau tombol sebelum fullscreen
-    alert('Silakan ketuk layar untuk memulai tampilan layar penuh.');
-
+    // Tunda permintaan fullscreen hingga iframe dimuat
     proctorFrame.onload = () => {
-        proctorFrame.addEventListener('click', () => {
-            setTimeout(() => {
-                openFullscreen();
-            }, 100); // Memberi jeda waktu untuk memastikan iframe siap
-        });
+        setTimeout(() => {
+            openFullscreen();
+        }, 100); // Memberi jeda waktu untuk memastikan iframe siap
     };
 
     proctoringStarted = true;
 }
 
-// Fungsi untuk membuka mode fullscreen
 function openFullscreen() {
     const elem = proctorFrame; // Menggunakan iframe sebagai elemen untuk fullscreen
     if (elem.requestFullscreen) {
-        elem.requestFullscreen().catch(err => {
-            console.warn('Gagal masuk ke mode fullscreen:', err);
-        });
+        elem.requestFullscreen();
     } else if (elem.mozRequestFullScreen) {
-        elem.mozRequestFullScreen().catch(err => {
-            console.warn('Gagal masuk ke mode fullscreen:', err);
-        });
+        elem.mozRequestFullScreen();
     } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen().catch(err => {
-            console.warn('Gagal masuk ke mode fullscreen:', err);
-        });
+        elem.webkitRequestFullscreen();
     } else if (elem.msRequestFullscreen) {
-        elem.msRequestFullscreen().catch(err => {
-            console.warn('Gagal masuk ke mode fullscreen:', err);
-        });
-    } else {
-        alert('Mode layar penuh tidak didukung oleh perangkat ini.');
+        elem.msRequestFullscreen();
     }
 }
 
 // Cek apakah pengguna meninggalkan fullscreen atau beralih tab
 document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-document.addEventListener('msfullscreenchange', handleFullscreenChange);
-
-function handleFullscreenChange() {
-    if (!document.fullscreenElement && proctoringStarted) {
-        alert('Jika tidak masuk ke mode layar penuh, silakan coba lagi atau tekan tombol fullscreen.');
-        redirectToWarningPage();
-    }
-}
-
-function redirectToWarningPage() {
-    window.location.href = 'https://ujianalanshar.blogspot.com/p/menyembunyikan-elemen-elemen-yang-tidak.html';
-}
-
-// Cegah klik kanan dan beberapa kombinasi keyboard
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey && (e.key === 't' || e.key === 'w')) {
-        e.preventDefault();
-    }
-});
+document.addEventListener('mozfullscreenchange', handle
