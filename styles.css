@@ -120,11 +120,27 @@ body {
 .hide {
     display: none;
 }
+
 #proctor-frame {
     width: 100%;
     height: 500px;
 }
+
 #qr-video {
     width: 100%;
     height: 400px;
+}
+
+/* Menambahkan fitur agar teks tidak bisa di select atau diblok */
+body, p, h1, h2, h3, h4, h5, h6, div, span {
+    -webkit-user-select: none; /* Mencegah seleksi teks di Chrome, Safari */
+    -moz-user-select: none;    /* Mencegah seleksi teks di Firefox */
+    -ms-user-select: none;     /* Mencegah seleksi teks di IE */
+    user-select: none;         /* Mencegah seleksi teks di browser standar */
+}
+
+/* Mencegah drag elemen teks */
+body, p, h1, h2, h3, h4, h5, h6, div, span {
+    -webkit-user-drag: none;   /* Mencegah drag di WebKit (Chrome, Safari) */
+    user-drag: none;           /* Mencegah drag di browser standar */
 }
