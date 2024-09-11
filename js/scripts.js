@@ -94,4 +94,25 @@ function openFullscreen() {
 
 // Cek apakah pengguna meninggalkan fullscreen atau beralih tab
 document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('mozfullscreenchange', handle
+document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+    if (!document.fullscreenElement && proctoringStarted) {
+        alert('Jika tidak masuk ke mode layar penuh, silakan coba lagi atau tekan tombol fullscreen.');
+        redirectToWarningPage();
+    }
+}
+
+function redirectToWarningPage() {
+    window.location.href = 'https://ujianalanshar.blogspot.com/p/menyembunyikan-elemen-elemen-yang-tidak.html';
+}
+
+// Cegah klik kanan dan beberapa kombinasi keyboard
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey && (e.key === 't' || e.key === 'w')) {
+        e.preventDefault();
+    }
+});
