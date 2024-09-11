@@ -22,14 +22,9 @@ function startProctoring() {
         proctorContainer.classList.remove('hide'); // Tampilkan proctor-container
         proctorFrame.src = link;
         proctorFrame.style.display = 'block'; // Pastikan iframe terlihat
-
-        // Tunda permintaan fullscreen hingga iframe dimuat
-        proctorFrame.onload = () => {
-            setTimeout(() => {
-                openFullscreen();
-            }, 100); // Memberi jeda waktu untuk memastikan iframe siap
-        };
-
+        
+        // Langsung masuk ke fullscreen setelah tombol ditekan
+        openFullscreen();
         proctoringStarted = true; // Set flag menjadi true saat tombol Start ditekan
     } else {
         alert('Masukkan link terlebih dahulu!');
@@ -69,13 +64,8 @@ function openLink(link) {
     proctorFrame.src = link;
     proctorFrame.style.display = 'block';
 
-    // Tunda permintaan fullscreen hingga iframe dimuat
-    proctorFrame.onload = () => {
-        setTimeout(() => {
-            openFullscreen();
-        }, 100); // Memberi jeda waktu untuk memastikan iframe siap
-    };
-
+    // Panggil fullscreen secara langsung setelah QR code berhasil di-scan
+    openFullscreen();
     proctoringStarted = true;
 }
 
@@ -83,11 +73,11 @@ function openFullscreen() {
     const elem = proctorFrame; // Menggunakan iframe sebagai elemen untuk fullscreen
     if (elem.requestFullscreen) {
         elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
+    } else if (elem.mozRequestFullScreen) { // Untuk Firefox
         elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
+    } else if (elem.webkitRequestFullscreen) { // Untuk Chrome, Safari, dan Opera
         elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
+    } else if (elem.msRequestFullscreen) { // Untuk IE/Edge
         elem.msRequestFullscreen();
     }
 }
