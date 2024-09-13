@@ -106,3 +106,15 @@ document.addEventListener('keydown', function (e) {
         e.preventDefault();
     }
 });
+
+// Deteksi jika pengguna beralih aplikasi atau kehilangan fokus
+window.addEventListener('blur', function () {
+    if (proctoringStarted) {
+        alert("Anda beralih dari aplikasi ujian. Ujian dibatalkan.");
+        redirectToWarningPage(); // Arahkan pengguna ke halaman peringatan jika kehilangan fokus
+    }
+});
+
+window.addEventListener('focus', function () {
+    console.log("Kembali ke aplikasi ujian.");
+});
