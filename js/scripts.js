@@ -18,33 +18,30 @@ closeQrButton.addEventListener('click', closeQrScanner);
 function startProctoring() {
     const link = linkInput.value.trim();
     if (link) {
-        inputContainer.classList.add('hide'); // Sembunyikan input-container
-        proctorContainer.classList.remove('hide'); // Tampilkan proctor-container
+        inputContainer.classList.add('hide');
+        proctorContainer.classList.remove('hide');
         proctorFrame.src = link;
-        proctorFrame.style.display = 'block'; // Pastikan iframe terlihat
+        proctorFrame.style.display = 'block';
         
-        // Langsung masuk ke fullscreen setelah tombol ditekan
         openFullscreen();
-        proctoringStarted = true; // Set flag menjadi true saat tombol Start ditekan
+        enableProctoringSecurity(); // Aktifkan proteksi keamanan
+        proctoringStarted = true;
     } else {
         alert('Masukkan link terlebih dahulu!');
     }
 }
 
 function startQrScanning() {
-    inputContainer.classList.add('hide'); // Sembunyikan input-container
-    qrContainer.classList.remove('hide'); // Tampilkan qr-container
+    inputContainer.classList.add('hide');
+    qrContainer.classList.remove('hide');
 
-    // Inisialisasi pemindai QR dengan path worker default
     const qrScanner = new QrScanner(
         qrVideo,
         result => {
             qrScanner.stop();
-            openLink(result.data); // Gunakan result.data untuk mengakses URL
+            openLink(result.data);
         },
-        {
-            returnDetailedScanResult: true // Gunakan API baru
-        }
+        { returnDetailedScanResult: true }
     );
 
     qrScanner.start().catch(err => {
@@ -64,45 +61,99 @@ function openLink(link) {
     proctorFrame.src = link;
     proctorFrame.style.display = 'block';
 
-    // Panggil fullscreen secara langsung setelah QR code berhasil di-scan
     openFullscreen();
+    enableProctoringSecurity(); // Aktifkan proteksi keamanan
     proctoringStarted = true;
 }
 
+// 1. Fullscreen pada level DOKUMEN UTAMA (bukan elemen iframe saja)
 function openFullscreen() {
-    const elem = proctorFrame; // Menggunakan iframe sebagai elemen untuk fullscreen
+    const elem = document.documentElement; // Target seluruh layar
     if (elem.requestFullscreen) {
         elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { // Untuk Firefox
-        elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { // Untuk Chrome, Safari, dan Opera
+    } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { // Untuk IE/Edge
+    } else if (elem.msRequestFullscreen) {
         elem.msRequestFullscreen();
+    }
+
+    // Mengunci tombol pintasan OS jika didukung browser (Desktop)
+    if ('keyboard' in navigator && 'lock' in navigator.keyboard) {
+        navigator.keyboard.lock(["Escape", "Tab", "MetaLeft", "MetaRight", "AltLeft", "AltRight"]);
     }
 }
 
-// Cek apakah pengguna meninggalkan fullscreen atau beralih tab
+// 2. Fungsi Pengawas Keamanan Utama
+function enableProctoringSecurity() {
+    // A. Cegah Gestur Usap dari Pinggir Layar (Membuka Sidebar/Notifikasi Mobile)
+    const EDGE_THRESHOLD = 25; // Jarak 25px dari tepi layar
+    document.addEventListener('touchstart', (e) => {
+        if (!proctoringStarted) return;
+        const touch = e.touches[0];
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        const isEdgeTouch = 
+            touch.clientX <= EDGE_THRESHOLD || 
+            touch.clientX >= screenWidth - EDGE_THRESHOLD ||
+            touch.clientY <= EDGE_THRESHOLD ||
+            touch.clientY >= screenHeight - EDGE_THRESHOLD;
+
+        if (isEdgeTouch) {
+            e.preventDefault(); // Batalkan gerakan usap
+            redirectToWarningPage();
+        }
+    }, { passive: false });
+
+    // B. Deteksi Kehilangan Fokus (Membuka Menu Sistem / Aplikasi Lain)
+    window.addEventListener('blur', () => {
+        if (!proctoringStarted) return;
+        
+        // Jeda sebentar untuk memverifikasi apakah klik terjadi di dalam iframe
+        setTimeout(() => {
+            if (document.activeElement !== proctorFrame) {
+                redirectToWarningPage();
+            }
+        }, 150);
+    });
+
+    // C. Deteksi Perubahan Layar / Split Screen
+    window.addEventListener('resize', () => {
+        if (!proctoringStarted) return;
+        if (!document.fullscreenElement) {
+            redirectToWarningPage();
+        }
+    });
+}
+
+// Handler Perubahan Fullscreen
 document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('mozfullscreenchange', handleFullscreenChange);
 document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-document.addEventListener('msfullscreenchange', handleFullscreenChange);
 
 function handleFullscreenChange() {
     if (!document.fullscreenElement && proctoringStarted) {
-        alert('Jika tidak masuk ke mode layar penuh, silakan coba lagi atau tekan tombol fullscreen.');
         redirectToWarningPage();
     }
 }
 
 function redirectToWarningPage() {
+    alert('Pelanggaran terdeteksi! Anda mencoba keluar dari layar ujian atau membuka menu lain.');
     window.location.href = 'https://ujianalanshar.blogspot.com/p/menyembunyikan-elemen-elemen-yang-tidak.html';
 }
 
-// Cegah klik kanan dan beberapa kombinasi keyboard
+// Cegah Klik Kanan & Kombinasi Tombol Pintasan
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey && (e.key === 't' || e.key === 'w')) {
+    if (!proctoringStarted) return;
+    
+    // Blokir Tab, Alt, Windows/Cmd, F12, Ctrl+T, Ctrl+W, Ctrl+N, Ctrl+R
+    if (
+        e.key === 'Tab' || 
+        e.key === 'Meta' || 
+        e.altKey || 
+        e.key === 'F12' || 
+        (e.ctrlKey && (e.key === 't' || e.key === 'w' || e.key === 'n' || e.key === 'r'))
+    ) {
         e.preventDefault();
     }
 });
